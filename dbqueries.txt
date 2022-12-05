@@ -1,0 +1,29 @@
+CREATE SCHEMA test
+    AUTHORIZATION postgres;
+
+COMMENT ON SCHEMA test
+    IS 'test schema for Go apps';
+
+CREATE TABLE books (
+	id serial PRIMARY KEY,
+	title VARCHAR ( 50 ) NOT NULL,
+	authorid INT NOT NULL references authors(id)
+);
+
+CREATE TABLE authors (
+	id serial PRIMARY KEY,
+	name VARCHAR ( 50 ) NOT NULL,
+	surname VARCHAR ( 50 ) NOT NULL
+);
+
+CREATE TABLE readers (
+	id serial PRIMARY KEY,
+	username VARCHAR ( 50 ) NOT NULL
+);
+
+CREATE TABLE mylibrary (
+	readerid INT NOT NULL references readers(id),
+	bookid INT NOT NULL references books(id)
+);
+
+select * from books

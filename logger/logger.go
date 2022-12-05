@@ -5,6 +5,7 @@ import (
 )
 
 // ProvideLogger provides a zap logger
+// TODO: later replace with logrus
 func ProvideLogger() *zap.SugaredLogger {
 	logger, _ := zap.NewProduction()
 	return logger.Sugar()
