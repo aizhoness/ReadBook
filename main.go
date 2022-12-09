@@ -28,11 +28,12 @@ func Register(
 	lc fx.Lifecycle,
 	logger *zap.SugaredLogger,
 	router *mux.Router,
+	config *config.Config,
 ) {
 	lc.Append(
 		fx.Hook{
 			OnStart: func(context.Context) error {
-				addr := config.Options().Address //":8080"
+				addr := config.Server.Host + ":" + config.Server.Port
 				logger.Info("Listening on ", addr)
 				go http.ListenAndServe(addr, router)
 				return nil

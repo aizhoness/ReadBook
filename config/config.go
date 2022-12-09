@@ -1,27 +1,29 @@
 package config
 
 import (
-	"io/ioutil"
+	"os"
 
 	"gopkg.in/yaml.v2"
 )
 
-type ApplicationConfig struct {
-	Address string
-}
-
 type Config struct {
-	ApplicationConfig `yaml:"application"`
+	Server struct {
+		Host string `yaml:"host"`
+		Port string `yaml:"port"`
+	} `yaml:"server"`
 }
 
 func ProvideConfig() *Config {
 	conf := &Config{}
-	data, err := ioutil.ReadFile("/base.yaml")
+	file, err := os.Open("config/base.yaml")
 	if err != nil {
+		//temporary we will panic errors
 		panic(err)
 	}
-	err = yaml.Unmarshal([]byte(data), &conf)
-	if err != nil {
+	defer file.Close()
+	d := yaml.NewDecoder(file)
+	if err := d.Decode(&conf); err != nil {
+		//temporary we will panic errors
 		panic(err)
 	}
 
