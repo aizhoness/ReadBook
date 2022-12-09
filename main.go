@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ReadBook/config"
 	"ReadBook/logger"
 	handler "ReadBook/route_handler"
 	"ReadBook/router"
@@ -17,6 +18,7 @@ func main() {
 		fx.Provide(
 			logger.Options,
 			router.Options,
+			config.Options,
 		),
 		fx.Invoke(Register),
 	).Run()
@@ -30,7 +32,7 @@ func Register(
 	lc.Append(
 		fx.Hook{
 			OnStart: func(context.Context) error {
-				addr := ":8080"
+				addr := config.Options().Address //":8080"
 				logger.Info("Listening on ", addr)
 				go http.ListenAndServe(addr, router)
 				return nil
