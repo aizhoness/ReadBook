@@ -2,6 +2,7 @@ package main
 
 import (
 	"ReadBook/config"
+	"ReadBook/dbpart"
 	"ReadBook/logger"
 	handler "ReadBook/route_handler"
 	"ReadBook/router"
@@ -46,5 +47,6 @@ func Register(
 	)
 
 	handler.New(logger, router)
+	dbpart.New(logger)
 
 }

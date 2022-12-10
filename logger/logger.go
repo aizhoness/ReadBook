@@ -9,6 +9,7 @@ import (
 func ProvideLogger() *zap.SugaredLogger {
 	logger, _ := zap.NewProduction()
 	return logger.Sugar()
+	//logrus.SetFormatter(new(logrus.JSONFormatter))
 }
 
 var Options = ProvideLogger
