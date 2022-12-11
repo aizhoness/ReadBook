@@ -26,4 +26,14 @@ CREATE TABLE mylibrary (
 	bookid INT NOT NULL references books(id)
 );
 
-select * from books
+
+--**
+INSERT INTO authors(name, surname) VALUES ('Fredrik', 'Backman')
+--**
+INSERT INTO books(title, authorid) VALUES ('A man called Ove', 1)
+INSERT INTO books(title, authorid) VALUES ('Anxious people', 1)
+INSERT INTO books(title, authorid) VALUES ('My grandmother asked me to tell you she is sorry', 1)
+--**
+INSERT INTO readers(username) VALUES ('aizhoness')
+--**
+INSERT INTO mylibrary(readerid, bookid) VALUES (1, 3)
