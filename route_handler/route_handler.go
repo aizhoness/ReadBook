@@ -1,22 +1,25 @@
 package route_handler
 
 import (
+	"ReadBook/models"
 	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
 
 // Handler struct for HTTP requests
 type Handler struct {
-	logger *zap.SugaredLogger
-	router *mux.Router
+	logger   *zap.SugaredLogger
+	router   *mux.Router
+	database *sqlx.DB
 }
 
 // New creates a Handler struct
-func New(logger *zap.SugaredLogger, router *mux.Router) *Handler {
-	h := Handler{logger, router}
+func New(logger *zap.SugaredLogger, router *mux.Router, database *sqlx.DB) *Handler {
+	h := Handler{logger, router, database}
 	h.registerRoutes()
 
 	return &h
@@ -27,25 +30,15 @@ func (h *Handler) registerRoutes() {
 	h.router.HandleFunc("/books", h.getBooks).Methods("GET")
 }
 
-// Book represents product in our API
-type Book struct {
-	Title  string `json:"title"`
-	Author string `json:"author"`
-}
-
-// BooksResp is the response for the GET /books endpoint
-type BooksResp struct {
-	Books []Book `json:"books"`
-}
-
 // getBeans is the route handler for the GET /beans endpoint
 func (h *Handler) getBooks(w http.ResponseWriter, r *http.Request) {
-	var books = make([]Book, 0, 1)
-	var b = Book{
-		Title:  "Head First Go",
-		Author: "McGavren",
+	var resp = &models.BooksResp{}
+	var b = models.Book{
+		ID:       1,
+		Title:    "Head First Go",
+		AuthorID: 1,
 	}
-	books = append(books, b)
+	resp.Books = append(resp.Books, b)
 
-	json.NewEncoder(w).Encode(&BooksResp{books})
+	json.NewEncoder(w).Encode(resp)
 }

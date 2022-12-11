@@ -10,6 +10,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
@@ -20,6 +21,7 @@ func main() {
 			logger.Options,
 			router.Options,
 			config.Options,
+			dbpart.Options,
 		),
 		fx.Invoke(Register),
 	).Run()
@@ -30,6 +32,7 @@ func Register(
 	logger *zap.SugaredLogger,
 	router *mux.Router,
 	config *config.Config,
+	database *sqlx.DB,
 ) {
 	lc.Append(
 		fx.Hook{
@@ -41,12 +44,12 @@ func Register(
 			},
 			OnStop: func(context.Context) error {
 				defer logger.Sync()
+				defer database.Close()
 				return nil
 			},
 		},
 	)
 
-	handler.New(logger, router)
-	dbpart.New(logger)
+	handler.New(logger, router, database)
 
 }
