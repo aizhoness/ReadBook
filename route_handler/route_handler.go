@@ -33,12 +33,17 @@ func (h *Handler) registerRoutes() {
 // getBeans is the route handler for the GET /beans endpoint
 func (h *Handler) getBooks(w http.ResponseWriter, r *http.Request) {
 	var resp = &models.BooksResp{}
-	var b = models.Book{
-		ID:       1,
-		Title:    "Head First Go",
-		AuthorID: 1,
+	book := models.Book{}
+	rows, err := h.database.Queryx("SELECT * FROM books")
+	if err != nil {
+		h.logger.Fatalf("Failed to query Select: %v", err)
 	}
-	resp.Books = append(resp.Books, b)
-
+	for rows.Next() {
+		err := rows.StructScan(&book)
+		if err != nil {
+			h.logger.Fatalf("Failed to get select result: %v", err)
+		}
+		resp.Books = append(resp.Books, book)
+	}
 	json.NewEncoder(w).Encode(resp)
 }
